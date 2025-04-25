@@ -9,7 +9,7 @@ import '../blocs/stock_bloc.dart';
 import '../../../utils/environment_config.dart';
 import '../router/app_router.dart';
 import 'stock_entry_page.dart';
-import 'stock_warehouse.dart';
+import 'delete.dart';
 
 @RoutePage()
 class StockSamplePage extends StatefulWidget {

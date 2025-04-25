@@ -244,7 +244,7 @@ class StockRepository {
 
     final response = await dio.post('$baseUrl$url', data: requestBody);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 202) {
       // The API appears to return a ResponseInfo object without the created Stock data
       // So we'll just return the original model since it should be created with the same data
       // You may want to add a check for the "status" field in ResponseInfo
