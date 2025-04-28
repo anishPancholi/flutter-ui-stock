@@ -552,10 +552,10 @@ class _WarehouseDetailsPageState extends State<WarehouseDetailsPage> {
     //     formGroup.control(_receiverTypeKey).value as String?;
     // final int dateOfEntry = DateTime.now().millisecondsSinceEpoch;
 
-    final additionalFields = StockAdditionalDetails(
-      version: "1.0.0",
-      fields: [],
-    );
+    // final additionalFields = StockAdditionalDetails(
+    //   version: "1.0.0",
+    //   fields: [],
+    // );
 
     final stockModel = StockModel(
       tenantId: tenantId,

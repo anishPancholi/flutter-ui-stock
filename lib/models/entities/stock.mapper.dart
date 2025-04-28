@@ -345,8 +345,8 @@ class StockModelMapper extends ClassMapperBase<StockModel> {
   static String? _$transactingPartyType(StockModel v) => v.transactingPartyType;
   static const Field<StockModel, String> _f$transactingPartyType =
       Field('transactingPartyType', _$transactingPartyType, opt: true);
-  static String? _$quantity(StockModel v) => v.quantity;
-  static const Field<StockModel, String> _f$quantity =
+  static int? _$quantity(StockModel v) => v.quantity;
+  static const Field<StockModel, int> _f$quantity =
       Field('quantity', _$quantity, opt: true);
   static String? _$wayBillNumber(StockModel v) => v.wayBillNumber;
   static const Field<StockModel, String> _f$wayBillNumber =
@@ -379,6 +379,13 @@ class StockModelMapper extends ClassMapperBase<StockModel> {
   static String? _$transactionReason(StockModel v) => v.transactionReason;
   static const Field<StockModel, String> _f$transactionReason =
       Field('transactionReason', _$transactionReason, opt: true);
+  static AuditDetails? _$auditDetails(StockModel v) => v.auditDetails;
+  static const Field<StockModel, AuditDetails> _f$auditDetails =
+      Field('auditDetails', _$auditDetails, opt: true);
+  static ClientAuditDetails? _$clientAuditDetails(StockModel v) =>
+      v.clientAuditDetails;
+  static const Field<StockModel, ClientAuditDetails> _f$clientAuditDetails =
+      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
   static DateTime? _$dateOfEntryTime(StockModel v) => v.dateOfEntryTime;
   static const Field<StockModel, DateTime> _f$dateOfEntryTime =
       Field('dateOfEntryTime', _$dateOfEntryTime, mode: FieldMode.member);
@@ -406,6 +413,8 @@ class StockModelMapper extends ClassMapperBase<StockModel> {
     #rowVersion: _f$rowVersion,
     #transactionType: _f$transactionType,
     #transactionReason: _f$transactionReason,
+    #auditDetails: _f$auditDetails,
+    #clientAuditDetails: _f$clientAuditDetails,
     #dateOfEntryTime: _f$dateOfEntryTime,
   };
   @override
@@ -433,7 +442,9 @@ class StockModelMapper extends ClassMapperBase<StockModel> {
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         rowVersion: data.dec(_f$rowVersion),
         transactionType: data.dec(_f$transactionType),
-        transactionReason: data.dec(_f$transactionReason));
+        transactionReason: data.dec(_f$transactionReason),
+        auditDetails: data.dec(_f$auditDetails),
+        clientAuditDetails: data.dec(_f$clientAuditDetails));
   }
 
   @override
@@ -489,6 +500,9 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   StockAdditionalDetailsCopyWith<$R, StockAdditionalDetails,
       StockAdditionalDetails>? get additionalFields;
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails;
   $R call(
       {int? dateOfEntry,
       StockAdditionalDetails? additionalFields,
@@ -500,7 +514,7 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       String? referenceIdType,
       String? transactingPartyId,
       String? transactingPartyType,
-      String? quantity,
+      int? quantity,
       String? wayBillNumber,
       String? clientReferenceId,
       String? receiverId,
@@ -510,7 +524,9 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       bool? nonRecoverableError,
       int? rowVersion,
       String? transactionType,
-      String? transactionReason});
+      String? transactionReason,
+      AuditDetails? auditDetails,
+      ClientAuditDetails? clientAuditDetails});
   StockModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -527,6 +543,13 @@ class _StockModelCopyWithImpl<$R, $Out>
           StockAdditionalDetails>?
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
+  @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails => $value.clientAuditDetails?.copyWith
+          .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
           {Object? dateOfEntry = $none,
@@ -549,7 +572,9 @@ class _StockModelCopyWithImpl<$R, $Out>
           Object? nonRecoverableError = $none,
           Object? rowVersion = $none,
           Object? transactionType = $none,
-          Object? transactionReason = $none}) =>
+          Object? transactionReason = $none,
+          Object? auditDetails = $none,
+          Object? clientAuditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (dateOfEntry != $none) #dateOfEntry: dateOfEntry,
         if (additionalFields != $none) #additionalFields: additionalFields,
@@ -574,7 +599,9 @@ class _StockModelCopyWithImpl<$R, $Out>
           #nonRecoverableError: nonRecoverableError,
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (transactionType != $none) #transactionType: transactionType,
-        if (transactionReason != $none) #transactionReason: transactionReason
+        if (transactionReason != $none) #transactionReason: transactionReason,
+        if (auditDetails != $none) #auditDetails: auditDetails,
+        if (clientAuditDetails != $none) #clientAuditDetails: clientAuditDetails
       }));
   @override
   StockModel $make(CopyWithData data) => StockModel(
@@ -605,7 +632,10 @@ class _StockModelCopyWithImpl<$R, $Out>
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       transactionType: data.get(#transactionType, or: $value.transactionType),
       transactionReason:
-          data.get(#transactionReason, or: $value.transactionReason));
+          data.get(#transactionReason, or: $value.transactionReason),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      clientAuditDetails:
+          data.get(#clientAuditDetails, or: $value.clientAuditDetails));
 
   @override
   StockModelCopyWith<$R2, StockModel, $Out2> $chain<$R2, $Out2>(
@@ -628,8 +658,8 @@ class StockAdditionalDetailsMapper
   @override
   final String id = 'StockAdditionalDetails';
 
-  static String? _$version(StockAdditionalDetails v) => v.version;
-  static const Field<StockAdditionalDetails, String> _f$version =
+  static int? _$version(StockAdditionalDetails v) => v.version;
+  static const Field<StockAdditionalDetails, int> _f$version =
       Field('version', _$version);
   static String? _$schema(StockAdditionalDetails v) => v.schema;
   static const Field<StockAdditionalDetails, String> _f$schema =
@@ -717,7 +747,7 @@ abstract class StockAdditionalDetailsCopyWith<
       StockAdditinalField,
       StockAdditinalFieldCopyWith<$R, StockAdditinalField,
           StockAdditinalField>>? get fields;
-  $R call({String? version, String? schema, List<StockAdditinalField>? fields});
+  $R call({int? version, String? schema, List<StockAdditinalField>? fields});
   StockAdditionalDetailsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }

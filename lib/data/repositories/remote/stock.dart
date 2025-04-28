@@ -249,15 +249,16 @@ class StockRepository {
       // So we'll just return the original model since it should be created with the same data
       // You may want to add a check for the "status" field in ResponseInfo
 
-      final Map<String, dynamic> jsonResponse =
-          response.data as Map<String, dynamic>;
+      // final Map<String, dynamic> jsonResponse =
+      //     response.data as Map<String, dynamic>;
 
-      // Check if the response contains a successful status
-      final responseInfo = jsonResponse['ResponseInfo'];
-      if (responseInfo == null || responseInfo['status'] != 'SUCCESSFUL') {
-        throw Exception(
-            "Stock creation failed: ${jsonResponse['ResponseInfo']}");
-      }
+      // // Check if the response contains a successful status
+      // final responseInfo = jsonResponse['ResponseInfo'];
+      // if (responseInfo == null) {
+      //   //|| responseInfo['status'] != 'SUCCESSFUL'
+      //   throw Exception(
+      //       "Stock creation failed: ${jsonResponse['ResponseInfo']}");
+      // }
 
       // Since the API doesn't return the created stock object,
       // we'll just return the original model with the assumption it was created successfully

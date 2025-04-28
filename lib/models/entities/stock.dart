@@ -1,4 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:digit_data_model/data_model.dart';
 
 part 'stock.mapper.dart';
 
@@ -77,7 +78,7 @@ class StockModel with StockModelMappable {
   final String? referenceIdType;
   final String? transactingPartyId;
   final String? transactingPartyType;
-  final String? quantity;
+  final int? quantity;
   final String? wayBillNumber;
   final String? receiverId;
   final String? receiverType;
@@ -90,6 +91,8 @@ class StockModel with StockModelMappable {
   final String? transactionReason;
   final StockAdditionalDetails? additionalFields;
   final DateTime? dateOfEntryTime;
+  final AuditDetails? auditDetails;
+  final ClientAuditDetails? clientAuditDetails;
 
   StockModel({
     int? dateOfEntry,
@@ -113,6 +116,8 @@ class StockModel with StockModelMappable {
     this.rowVersion,
     this.transactionType,
     this.transactionReason,
+    this.auditDetails,
+    this.clientAuditDetails,
   }) : dateOfEntryTime = dateOfEntry == null
             ? null
             : DateTime.fromMillisecondsSinceEpoch(dateOfEntry);
@@ -122,7 +127,7 @@ class StockModel with StockModelMappable {
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class StockAdditionalDetails with StockAdditionalDetailsMappable {
-  final String? version;
+  final int? version;
   final String? schema;
   final List<StockAdditinalField>? fields;
 

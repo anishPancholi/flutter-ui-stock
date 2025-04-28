@@ -198,6 +198,9 @@ class _WarehouseDetailsPageState extends State<WarehouseDetailsPage> {
                           fetched: (facilities, allFacilities) {
                             return ReactiveWrapperField(
                               formControlName: _facilityKey,
+                              validationMessages: {
+                                'required': (object) => 'Facility_IS_REQUIRED',
+                              },
                               builder: (field) => LabeledField(
                                 label:
                                     localizations.translate('Select Facility'),
@@ -209,17 +212,10 @@ class _WarehouseDetailsPageState extends State<WarehouseDetailsPage> {
                                           name: 'PF_${f.id}', code: f.id))
                                       .toList(),
                                   onSelect: (value) {
-                                    formGroup.control(_facilityKey).value =
-                                        value.code;
+                                    field.control.value = value.code;
                                   },
                                   emptyItemText:
                                       localizations.translate('No match found'),
-                                  errorMessage:
-                                      formGroup.control(_facilityKey).hasErrors
-                                          ? localizations.translate(
-                                              'Field is required',
-                                            )
-                                          : null,
                                 ),
                               ),
                             );
@@ -320,7 +316,7 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
 
     // Create additional fields
     final additionalFields = StockAdditionalDetails(
-      version: "1.0.0",
+      version: 1,
       fields: [
         if (comments != null && comments.isNotEmpty)
           StockAdditinalField(key: "comments", value: comments),
@@ -330,19 +326,34 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
 
     // Create the stock model
     final stockModel = StockModel(
-      // dateOfEntry:date,
-      tenantId: tenantId,
-      clientReferenceId: clientReferenceId,
-      facilityId: facilityId,
-      productVariantId: productId,
-      receiverId: receiverId,
-      receiverType: "WAREHOUSE",
-      senderId: facilityId,
-      senderType: "WAREHOUSE",
-      quantity: quantity.toString(),
-      transactionType: "RECEIVED",
-      additionalFields: additionalFields,
-    );
+        dateOfEntry: context.millisecondsSinceEpoch(),
+        tenantId: tenantId,
+        rowVersion: 1,
+        clientReferenceId: clientReferenceId,
+        facilityId: facilityId,
+        productVariantId: productId,
+        receiverId: receiverId,
+        receiverType: "WAREHOUSE",
+        senderId: facilityId,
+        referenceId: context.selectedProject.id,
+        referenceIdType: "PROJECT",
+        senderType: "WAREHOUSE",
+        quantity: quantity,
+        transactionType: "RECEIVED",
+        transactionReason: 'LOSS',
+        additionalFields: additionalFields,
+        auditDetails: AuditDetails(
+          createdBy: context.loggedInUser.uuid,
+          createdTime: context.millisecondsSinceEpoch(),
+          lastModifiedBy: context.loggedInUser.uuid,
+          lastModifiedTime: context.millisecondsSinceEpoch(),
+        ),
+        clientAuditDetails: ClientAuditDetails(
+          createdBy: context.loggedInUser.uuid,
+          createdTime: context.millisecondsSinceEpoch(),
+          lastModifiedBy: context.loggedInUser.uuid,
+          lastModifiedTime: context.millisecondsSinceEpoch(),
+        ));
 
     // final String tenantId = envConfig.variables.tenantId;
     // final String clientReferenceId = IdGen.i.identifier;
@@ -508,6 +519,10 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
                               fetched: (facilities, allFacilities) {
                                 return ReactiveWrapperField(
                                   formControlName: _receivedFromKey,
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        'receiverId_IS_REQUIRED',
+                                  },
                                   builder: (field) => LabeledField(
                                     label: localizations
                                         .translate('Select receiver id'),
@@ -519,9 +534,7 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
                                               name: 'PF_${f.id}', code: f.id))
                                           .toList(),
                                       onSelect: (value) {
-                                        formGroup
-                                            .control(_receivedFromKey)
-                                            .value = value.code;
+                                        field.control.value = value.code;
                                       },
                                       emptyItemText: localizations
                                           .translate('No match found'),
@@ -557,6 +570,10 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
                               fetched: (productVariants) {
                                 return ReactiveWrapperField(
                                   formControlName: _productKey,
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        'ProductId_IS_REQUIRED',
+                                  },
                                   builder: (field) => LabeledField(
                                     label: localizations.translate(
                                       'select Product',
@@ -572,9 +589,7 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
                                               ))
                                           .toList(),
                                       onSelect: (value) {
-                                        /// Find the selected
-                                        formGroup.control(_productKey).value =
-                                            value.code;
+                                        field.control.value = value.code;
                                       },
                                       emptyItemText: localizations
                                           .translate('No match found'),
