@@ -28,4 +28,5 @@ void initializeMappers() {
   p8.StockModelMapper.ensureInitialized();
   p8.StockAdditionalDetailsMapper.ensureInitialized();
   p8.StockAdditinalFieldMapper.ensureInitialized();
+  p8.CommonAuditDetailsMapper.ensureInitialized();
 }

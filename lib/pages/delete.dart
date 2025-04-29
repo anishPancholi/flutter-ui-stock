@@ -170,10 +170,10 @@ class _WarehouseDetailsPageState extends State<WarehouseDetailsPage> {
                     // Administrative unit field
                     ReactiveWrapperField(
                       formControlName: _adminUnitKey,
-                      validationMessages: {
-                        'required': (_) => localizations
-                            .translate("Administrative unit is required"),
-                      },
+                      // validationMessages: {
+                      //   'required': (_) => localizations
+                      //       .translate("Administrative unit is required"),
+                      // },
                       builder: (field) => LabeledField(
                         label: localizations.translate("Administrative unit"),
                         isRequired: true,
@@ -199,7 +199,7 @@ class _WarehouseDetailsPageState extends State<WarehouseDetailsPage> {
                             return ReactiveWrapperField(
                               formControlName: _facilityKey,
                               validationMessages: {
-                                'required': (object) => 'Facility_IS_REQUIRED',
+                                'required': (_) => 'Facility_IS_REQUIRED',
                               },
                               builder: (field) => LabeledField(
                                 label:
@@ -207,10 +207,28 @@ class _WarehouseDetailsPageState extends State<WarehouseDetailsPage> {
                                 capitalizedFirstLetter: false,
                                 isRequired: true,
                                 child: DigitDropdown<FacilityModel>(
+                                  // Removed invalid parameter
                                   items: facilities
                                       .map((f) => DropdownItem(
                                           name: 'PF_${f.id}', code: f.id))
                                       .toList(),
+
+                                  // onChange: (code) {
+                                  //   // update reactive form
+                                  //   field.control.value = code;
+                                  // },
+                                  selectedOption: formGroup
+                                              .control(_facilityKey)
+                                              .value !=
+                                          null
+                                      ? DropdownItem(
+                                          name: formGroup
+                                              .control(_facilityKey)
+                                              .value,
+                                          code: formGroup
+                                              .control(_facilityKey)
+                                              .value)
+                                      : const DropdownItem(name: '', code: '-'),
                                   onSelect: (value) {
                                     field.control.value = value.code;
                                   },
@@ -280,9 +298,11 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
   // Build the Reactive Form Group
   FormGroup buildForm() {
     return fb.group(<String, Object>{
-      _productKey: FormControl<String>(validators: [Validators.required]),
+      _productKey:
+          FormControl<ProductVariantModel>(validators: [Validators.required]),
       _receivedFromKey: FormControl<String>(validators: [Validators.required]),
-      _quantityKey: FormControl<int>(validators: [Validators.required]),
+      _quantityKey: FormControl<int>(
+          validators: [Validators.required, Validators.pattern(r'^[0-9]+$')]),
       _commentsKey: FormControl<String>(),
     });
   }
@@ -307,11 +327,35 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
     // Extract data from both forms
     final facilityId =
         widget.warehouseData['facilityId'] as String; // Not used in model
-    final productId = formGroup.control(_productKey).value as String;
+    final product = formGroup.control(_productKey).value as ProductVariantModel;
     final receiverId = formGroup.control(_receivedFromKey).value as String;
+
+    if (facilityId == receiverId) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)
+              .translate('Sender and Receiver cannot be same')),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     // final receiverId = widget.warehouseData[_receivedFromKey] as String;
     // final senderId = formGroup.control(facilityId).value as String;
     final quantity = formGroup.control(_quantityKey).value as int;
+
+    if (quantity.runtimeType != int) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)
+              .translate('Please enter valid quantity')),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     final comments = formGroup.control(_commentsKey).value as String?;
 
     // Create additional fields
@@ -331,7 +375,7 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
         rowVersion: 1,
         clientReferenceId: clientReferenceId,
         facilityId: facilityId,
-        productVariantId: productId,
+        productVariantId: product.id,
         receiverId: receiverId,
         receiverType: "WAREHOUSE",
         senderId: facilityId,
@@ -342,13 +386,13 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
         transactionType: "RECEIVED",
         transactionReason: 'LOSS',
         additionalFields: additionalFields,
-        auditDetails: AuditDetails(
+        auditDetails: CommonAuditDetails(
           createdBy: context.loggedInUser.uuid,
           createdTime: context.millisecondsSinceEpoch(),
           lastModifiedBy: context.loggedInUser.uuid,
           lastModifiedTime: context.millisecondsSinceEpoch(),
         ),
-        clientAuditDetails: ClientAuditDetails(
+        clientAuditDetails: CommonAuditDetails(
           createdBy: context.loggedInUser.uuid,
           createdTime: context.millisecondsSinceEpoch(),
           lastModifiedBy: context.loggedInUser.uuid,
@@ -406,6 +450,12 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
       state.maybeWhen(
         createSuccess: (stock) {
           // Navigate to success page
+          Toast.showToast(
+            context,
+            message: AppLocalizations.of(context)
+                .translate("Stock created successfully"),
+            type: ToastType.success,
+          );
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -520,8 +570,7 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
                                 return ReactiveWrapperField(
                                   formControlName: _receivedFromKey,
                                   validationMessages: {
-                                    'required': (object) =>
-                                        'receiverId_IS_REQUIRED',
+                                    'required': (_) => 'receiverId_IS_REQUIRED',
                                   },
                                   builder: (field) => LabeledField(
                                     label: localizations
@@ -533,18 +582,32 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
                                           .map((f) => DropdownItem(
                                               name: 'PF_${f.id}', code: f.id))
                                           .toList(),
+
+                                      selectedOption: formGroup
+                                                  .control(_receivedFromKey)
+                                                  .value !=
+                                              null
+                                          ? DropdownItem(
+                                              name: formGroup
+                                                  .control(_receivedFromKey)
+                                                  .value,
+                                              code: formGroup
+                                                  .control(_receivedFromKey)
+                                                  .value)
+                                          : const DropdownItem(
+                                              name: '', code: '-'),
                                       onSelect: (value) {
                                         field.control.value = value.code;
                                       },
                                       emptyItemText: localizations
                                           .translate('No match found'),
-                                      errorMessage: formGroup
-                                              .control(_receivedFromKey)
-                                              .hasErrors
-                                          ? localizations.translate(
-                                              'Field is required',
-                                            )
-                                          : null,
+                                      // errorMessage: formGroup
+                                      //         .control(_receivedFromKey)
+                                      //         .hasErrors
+                                      //     ? localizations.translate(
+                                      //         'Field is required',
+                                      //       )
+                                      //     : null,
                                     ),
                                   ),
                                 );
@@ -571,8 +634,7 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
                                 return ReactiveWrapperField(
                                   formControlName: _productKey,
                                   validationMessages: {
-                                    'required': (object) =>
-                                        'ProductId_IS_REQUIRED',
+                                    'required': (_) => 'ProductId_IS_REQUIRED',
                                   },
                                   builder: (field) => LabeledField(
                                     label: localizations.translate(
@@ -588,18 +650,43 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
                                                 code: variant.id,
                                               ))
                                           .toList(),
+
+                                      selectedOption:
+                                          formGroup
+                                                      .control(_productKey)
+                                                      .value !=
+                                                  null
+                                              ? DropdownItem(
+                                                  name: (formGroup
+                                                              .control(_productKey)
+                                                              .value
+                                                          as ProductVariantModel)
+                                                      .sku
+                                                      .toString(),
+                                                  code: (formGroup
+                                                              .control(_productKey)
+                                                              .value
+                                                          as ProductVariantModel)
+                                                      .id
+                                                      .toString())
+                                              : const DropdownItem(
+                                                  name: '', code: ''),
+
                                       onSelect: (value) {
-                                        field.control.value = value.code;
+                                        final selectedVariant = productVariants
+                                            .firstWhere((variant) =>
+                                                variant.id == value.code);
+                                        field.control.value = selectedVariant;
                                       },
                                       emptyItemText: localizations
                                           .translate('No match found'),
-                                      errorMessage: formGroup
-                                              .control(_productKey)
-                                              .hasErrors
-                                          ? localizations.translate(
-                                              'Field is required',
-                                            )
-                                          : null,
+                                      // errorMessage: formGroup
+                                      //         .control(_productKey)
+                                      //         .hasErrors
+                                      //     ? localizations.translate(
+                                      //         'Field is required',
+                                      //       )
+                                      //     : null,
                                     ),
                                   ),
                                 );
@@ -648,9 +735,15 @@ class _ReceivedStockDetailsPageState extends State<ReceivedStockDetailsPage> {
                         // Quantity field
                         ReactiveWrapperField(
                           formControlName: _quantityKey,
+                          // validationMessages: {
+                          //   'required': (_) =>
+                          //       localizations.translate("Quantity is required"),
+                          // },
                           validationMessages: {
-                            'required': (_) =>
+                            ValidationMessage.required: (_) =>
                                 localizations.translate("Quantity is required"),
+                            ValidationMessage.pattern: (_) =>
+                                localizations.translate("Enter valid quantity"),
                           },
                           builder: (field) => LabeledField(
                             label: localizations.translate("Quantity received"),

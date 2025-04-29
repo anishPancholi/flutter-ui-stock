@@ -379,12 +379,12 @@ class StockModelMapper extends ClassMapperBase<StockModel> {
   static String? _$transactionReason(StockModel v) => v.transactionReason;
   static const Field<StockModel, String> _f$transactionReason =
       Field('transactionReason', _$transactionReason, opt: true);
-  static AuditDetails? _$auditDetails(StockModel v) => v.auditDetails;
-  static const Field<StockModel, AuditDetails> _f$auditDetails =
+  static CommonAuditDetails? _$auditDetails(StockModel v) => v.auditDetails;
+  static const Field<StockModel, CommonAuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
-  static ClientAuditDetails? _$clientAuditDetails(StockModel v) =>
+  static CommonAuditDetails? _$clientAuditDetails(StockModel v) =>
       v.clientAuditDetails;
-  static const Field<StockModel, ClientAuditDetails> _f$clientAuditDetails =
+  static const Field<StockModel, CommonAuditDetails> _f$clientAuditDetails =
       Field('clientAuditDetails', _$clientAuditDetails, opt: true);
   static DateTime? _$dateOfEntryTime(StockModel v) => v.dateOfEntryTime;
   static const Field<StockModel, DateTime> _f$dateOfEntryTime =
@@ -500,8 +500,9 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
     implements ClassCopyWith<$R, $In, $Out> {
   StockAdditionalDetailsCopyWith<$R, StockAdditionalDetails,
       StockAdditionalDetails>? get additionalFields;
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
-  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+  CommonAuditDetailsCopyWith<$R, CommonAuditDetails, CommonAuditDetails>?
+      get auditDetails;
+  CommonAuditDetailsCopyWith<$R, CommonAuditDetails, CommonAuditDetails>?
       get clientAuditDetails;
   $R call(
       {int? dateOfEntry,
@@ -525,8 +526,8 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       int? rowVersion,
       String? transactionType,
       String? transactionReason,
-      AuditDetails? auditDetails,
-      ClientAuditDetails? clientAuditDetails});
+      CommonAuditDetails? auditDetails,
+      CommonAuditDetails? clientAuditDetails});
   StockModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -544,10 +545,11 @@ class _StockModelCopyWithImpl<$R, $Out>
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
   @override
-  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
-      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  CommonAuditDetailsCopyWith<$R, CommonAuditDetails, CommonAuditDetails>?
+      get auditDetails =>
+          $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
-  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+  CommonAuditDetailsCopyWith<$R, CommonAuditDetails, CommonAuditDetails>?
       get clientAuditDetails => $value.clientAuditDetails?.copyWith
           .$chain((v) => call(clientAuditDetails: v));
   @override
@@ -907,4 +909,147 @@ class _StockAdditinalFieldCopyWithImpl<$R, $Out>
   StockAdditinalFieldCopyWith<$R2, StockAdditinalField, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
           _StockAdditinalFieldCopyWithImpl($value, $cast, t);
+}
+
+class CommonAuditDetailsMapper extends ClassMapperBase<CommonAuditDetails> {
+  CommonAuditDetailsMapper._();
+
+  static CommonAuditDetailsMapper? _instance;
+  static CommonAuditDetailsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = CommonAuditDetailsMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'CommonAuditDetails';
+
+  static String? _$createdBy(CommonAuditDetails v) => v.createdBy;
+  static const Field<CommonAuditDetails, String> _f$createdBy =
+      Field('createdBy', _$createdBy, opt: true);
+  static int _$createdTime(CommonAuditDetails v) => v.createdTime;
+  static const Field<CommonAuditDetails, int> _f$createdTime =
+      Field('createdTime', _$createdTime, opt: true);
+  static String? _$lastModifiedBy(CommonAuditDetails v) => v.lastModifiedBy;
+  static const Field<CommonAuditDetails, String> _f$lastModifiedBy =
+      Field('lastModifiedBy', _$lastModifiedBy, opt: true);
+  static int _$lastModifiedTime(CommonAuditDetails v) => v.lastModifiedTime;
+  static const Field<CommonAuditDetails, int> _f$lastModifiedTime =
+      Field('lastModifiedTime', _$lastModifiedTime, opt: true);
+
+  @override
+  final MappableFields<CommonAuditDetails> fields = const {
+    #createdBy: _f$createdBy,
+    #createdTime: _f$createdTime,
+    #lastModifiedBy: _f$lastModifiedBy,
+    #lastModifiedTime: _f$lastModifiedTime,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  static CommonAuditDetails _instantiate(DecodingData data) {
+    return CommonAuditDetails(
+        createdBy: data.dec(_f$createdBy),
+        createdTime: data.dec(_f$createdTime),
+        lastModifiedBy: data.dec(_f$lastModifiedBy),
+        lastModifiedTime: data.dec(_f$lastModifiedTime));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static CommonAuditDetails fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<CommonAuditDetails>(map);
+  }
+
+  static CommonAuditDetails fromJson(String json) {
+    return ensureInitialized().decodeJson<CommonAuditDetails>(json);
+  }
+}
+
+mixin CommonAuditDetailsMappable {
+  String toJson() {
+    return CommonAuditDetailsMapper.ensureInitialized()
+        .encodeJson<CommonAuditDetails>(this as CommonAuditDetails);
+  }
+
+  Map<String, dynamic> toMap() {
+    return CommonAuditDetailsMapper.ensureInitialized()
+        .encodeMap<CommonAuditDetails>(this as CommonAuditDetails);
+  }
+
+  CommonAuditDetailsCopyWith<CommonAuditDetails, CommonAuditDetails,
+          CommonAuditDetails>
+      get copyWith => _CommonAuditDetailsCopyWithImpl(
+          this as CommonAuditDetails, $identity, $identity);
+  @override
+  String toString() {
+    return CommonAuditDetailsMapper.ensureInitialized()
+        .stringifyValue(this as CommonAuditDetails);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return CommonAuditDetailsMapper.ensureInitialized()
+        .equalsValue(this as CommonAuditDetails, other);
+  }
+
+  @override
+  int get hashCode {
+    return CommonAuditDetailsMapper.ensureInitialized()
+        .hashValue(this as CommonAuditDetails);
+  }
+}
+
+extension CommonAuditDetailsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, CommonAuditDetails, $Out> {
+  CommonAuditDetailsCopyWith<$R, CommonAuditDetails, $Out>
+      get $asCommonAuditDetails =>
+          $base.as((v, t, t2) => _CommonAuditDetailsCopyWithImpl(v, t, t2));
+}
+
+abstract class CommonAuditDetailsCopyWith<$R, $In extends CommonAuditDetails,
+    $Out> implements ClassCopyWith<$R, $In, $Out> {
+  $R call(
+      {String? createdBy,
+      int? createdTime,
+      String? lastModifiedBy,
+      int? lastModifiedTime});
+  CommonAuditDetailsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _CommonAuditDetailsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, CommonAuditDetails, $Out>
+    implements CommonAuditDetailsCopyWith<$R, CommonAuditDetails, $Out> {
+  _CommonAuditDetailsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<CommonAuditDetails> $mapper =
+      CommonAuditDetailsMapper.ensureInitialized();
+  @override
+  $R call(
+          {Object? createdBy = $none,
+          Object? createdTime = $none,
+          Object? lastModifiedBy = $none,
+          Object? lastModifiedTime = $none}) =>
+      $apply(FieldCopyWithData({
+        if (createdBy != $none) #createdBy: createdBy,
+        if (createdTime != $none) #createdTime: createdTime,
+        if (lastModifiedBy != $none) #lastModifiedBy: lastModifiedBy,
+        if (lastModifiedTime != $none) #lastModifiedTime: lastModifiedTime
+      }));
+  @override
+  CommonAuditDetails $make(CopyWithData data) => CommonAuditDetails(
+      createdBy: data.get(#createdBy, or: $value.createdBy),
+      createdTime: data.get(#createdTime, or: $value.createdTime),
+      lastModifiedBy: data.get(#lastModifiedBy, or: $value.lastModifiedBy),
+      lastModifiedTime:
+          data.get(#lastModifiedTime, or: $value.lastModifiedTime));
+
+  @override
+  CommonAuditDetailsCopyWith<$R2, CommonAuditDetails, $Out2> $chain<$R2, $Out2>(
+          Then<$Out2, $R2> t) =>
+      _CommonAuditDetailsCopyWithImpl($value, $cast, t);
 }
